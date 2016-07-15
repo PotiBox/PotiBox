@@ -35,28 +35,10 @@ void Bill::cycle(unsigned long currentTime) {
   //Debug::print("Bill: ");
   //Debug::println(reading);
 
-  /*int thing = reading / 10;
-
-  if (thing <= 1) {
-    digitalWrite(8, HIGH);
-    delay(100000);
-  }
-
-  for (int i = 0; i < thing; i++) {
-    digitalWrite(8, HIGH);
-    delay(500);
-    digitalWrite(8, LOW);
-    delay(500);
-  }
-
-  digitalWrite(8, LOW);
-  delay(3000);*/
-
   if (Bill::SENSOR_LIMIT < reading) {
     _servoIsSpinning = true;
 
     if (Bill::SERVO_IS_ON) {
-      digitalWrite(8, HIGH);
       _servo.write(Bill::SERVO_SPIN);
       Player::billInserted();
     }
@@ -76,7 +58,6 @@ void Bill::cycle(unsigned long currentTime) {
     }
   } else {
     if (Bill::SERVO_IS_ON) {
-      digitalWrite(8, LOW);
       _servo.write(Bill::SERVO_STOP);
     }
   }

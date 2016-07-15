@@ -4,7 +4,10 @@
 #include "Coin.h"
 #include "Player.h"
 
-const boolean DEBUG = true;
+#define STATUS_LIGHT_PIN 12
+
+// make sure to switch this to true if you want Serial debugging
+const boolean DEBUG = false;
 
 unsigned long MILLIS = 0;
 
@@ -31,7 +34,8 @@ Player playerClass = Player(45, 13, 11);
 void setup() {
   Debug::setup(DEBUG);
 
-  pinMode(8, OUTPUT);
+  pinMode(STATUS_LIGHT_PIN, OUTPUT);
+  analogWrite(STATUS_LIGHT_PIN, 255);
 
   billClass.begin();
   playerClass.begin();
