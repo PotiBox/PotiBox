@@ -17,10 +17,10 @@ void Player::cycle(unsigned long currentTime) {
     case Player::ANIM_NONE:
       break;
     case Player::ANIM_BILL:
-      _lights->animate(currentTime, 5000, Lights::RANDOM);
+      _lights->animate(currentTime, 3000, Lights::RANDOM);
       break;
     case Player::ANIM_COIN:
-      _lights->animate(currentTime, 2000, Lights::YELLOW);
+      _lights->animate(currentTime, 500, Lights::BLUE); 
       break;
   }
 

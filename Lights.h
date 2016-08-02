@@ -23,7 +23,12 @@ class Lights {
     void setColor(uint32_t *color);
     uint32_t* getColorFromInt(int color);
     void setRandomColors();
-
+    void theaterChase(uint32_t c, uint8_t wait);
+    void rainbowCycle(uint8_t wait);
+    uint32_t Wheel(byte WheelPos);
+    void spinning(uint32_t c, uint8_t wait);
+    void Rainbowspin(uint8_t wait) ;
+    void Blink(uint8_t wait, int nb);
     // colors
     uint32_t* off();
     uint32_t* randomColor();
@@ -40,6 +45,7 @@ class Lights {
     unsigned long _animateTimer;
     unsigned long _randomColorTimer;
     int _color;
+    int blinkcolor;
 };
 
 #endif

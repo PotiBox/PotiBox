@@ -45,7 +45,9 @@ void Bill::cycle(unsigned long currentTime) {
 
     // notify our player
     //Player::billInserted();
-  } else if (_servoIsSpinning) {
+  } 
+  
+  else if (_servoIsSpinning) {
     if (!this->_servoIsSpinningExtra) {
       _servoIsSpinningExtra = true;
       _extraSpinTimer = currentTime;
