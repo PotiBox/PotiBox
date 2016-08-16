@@ -2,18 +2,22 @@
 #define Music_h
 
 #include "Arduino.h"
+#include "Melodies.h"
 
 class Music {
   public:
-    static void setup(int speakerPin);
-    static void cycle();
-    static void setMusic(int count, int notes[], int durations[]);
+    Music(int speakerPin);
+    void begin();
+    void cycle(unsigned long currentTime);
+    void setMelody(const unsigned int melody[][2]);
   private:
-    static int SPEAKER_PIN;
-    static bool IS_PLAYING;
-    static int NOTES_COUNT;
-    //static int *NOTES[];
-    //static int *NOTES_DURATIONS[];
+    int _speakerPin;
+    unsigned long _toneTimer;
+    unsigned int _notePosition;
+    unsigned int _melody[10][2];
+
+    bool isEmptyMelody();
+    void printCurrentMelody();
 };
 
 #endif

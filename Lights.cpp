@@ -24,7 +24,6 @@ void Lights::cycle(unsigned long currentTime) {
       unsigned long timeSinceChange = currentTime - _randomColorTimer;
 
       if (timeSinceChange > 500) {
-        Debug::println(timeSinceChange);
         setRandomColors();
         _randomColorTimer = currentTime;
       }
@@ -44,9 +43,6 @@ void Lights::animate(unsigned long currentTime, int milliseconds, int color) {
 }
 
 void Lights::setColor(uint32_t *color) {
-  if (color[0] != 0 || color[1] != 0 || color[2] != 0) {
-    Debug::println("setColor");
-  }
   for (int i = 0; i < _pixelCount; i++) {
     _neoPixels.setPixelColor(i, _neoPixels.Color(color[0], color[1], color[2]));
   }
@@ -55,7 +51,6 @@ void Lights::setColor(uint32_t *color) {
 }
 
 void Lights::setRandomColors() {
-  Debug::println("setRandomColors");
   uint32_t *color;
   for (int i = 0; i < _pixelCount; i++) {
     color = randomColor();
