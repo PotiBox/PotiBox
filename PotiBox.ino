@@ -6,7 +6,7 @@
 #define STATUS_LIGHT_PIN 12
 
 // make sure to switch this to true if you want Serial debugging
-const boolean DEBUG = false;
+const boolean DEBUG = true;
 
 unsigned long MILLIS = 0;
 
@@ -17,7 +17,7 @@ Coin coinClass = Coin(A5);
 Bill billClass = Bill(10, A4, true);
 
 // player class (45 pixels per side)
-Player playerClass = Player(45, 13, 8);
+Player playerClass = Player(45, 13, 7/*8*/);
 
 void setup() {
   Debug::setup(DEBUG);

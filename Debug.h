@@ -10,7 +10,7 @@ class Debug {
     static void println(String out);
     static void print(int out);
     static void println(int out);
-  private:
+
     static bool IS_DEBUG;
 };
 

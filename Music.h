@@ -9,14 +9,21 @@ class Music {
     Music(int speakerPin);
     void begin();
     void cycle(unsigned long currentTime);
-    void setMelody(const unsigned int melody[][2]);
+    void setMelody(const int (*melody)[2]);
   private:
     int _speakerPin;
     unsigned long _toneTimer;
     unsigned int _notePosition;
-    unsigned int _melody[10][2];
+    boolean _firstNotePlayed;
+    const int (*_melody)[2];
+    int _currentNote;
+    int _currentDuration;
 
     bool isEmptyMelody();
+    bool isEndNote(int notePosition);
+    void setCurrentNoteAndDuration(int notePosition);
+    int getNoteAt(int notePosition);
+    int getDurationAt(int notePosition);
     void printCurrentMelody();
 };
 

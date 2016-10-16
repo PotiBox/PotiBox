@@ -2,66 +2,58 @@
 #include "Music.h"
 #include "Melodies.h"
 #include "Debug.h"
+#include "PROGMEM_read.h"
 
 Music::Music(int speakerPin) {
   _speakerPin = speakerPin;
   _notePosition = 0;
+  _firstNotePlayed = false;
+
+  setMelody(MELODY_NONE);
 }
 
 void Music::begin() {
-  pinMode(_speakerPin, OUTPUT);
-
-  /*typedef std::pair<int, int> tt;
-  typedef std::vector<tt> dd;
-
-  dd items;  // you could typedef std::pair<char,int>
-  items.push_back(tt(NOTE_C4, 1 ));
-  items.push_back(tt(3, 2 ));
-  items.push_back(tt(1, 3 ));*/
 }
 
 void Music::cycle(unsigned long currentTime) {
   // kill our playing if we are past our times
-  if (_notePosition > (NOTES_COUNT - 1)) {
-    //setMelody(MELODY_NONE);
+  if (isEmptyMelody()) {
     return;
-  } else if (isEmptyMelody()) {
+  } else if (_notePosition > (NOTES_COUNT - 1)) {
+    setMelody(MELODY_NONE);
     return;
   }
 
-  //int note = _melody[_notePosition][0];
-  //int duration = _melody[_notePosition][1];
-  
-  /*unsigned long toneElapsedTime = currentTime - _toneTimer;
+  unsigned long toneElapsedTime = currentTime - _toneTimer;
 
-  if (toneElapsedTime > 500) {
+  if (!_firstNotePlayed) {
+    noTone(_speakerPin);
+    tone(_speakerPin, _currentNote, _currentDuration);
+
+    _toneTimer = currentTime;
+    _firstNotePlayed = true;
+  } else if (toneElapsedTime > (_currentDuration * 1.3)) {
+    noTone(_speakerPin);
+
     _toneTimer = currentTime;
     _notePosition++;
-  }*/
+    setCurrentNoteAndDuration(_notePosition);
 
-  //printCurrentMelody();
+    if (isEndNote(_notePosition)) {
+      return;
+    }
 
-  /*Debug::print("Note: ");
-  Debug::print(note);
-  Debug::print(" Duration: ");
-  Debug::println(duration);*/
-
-  //tone(_speakerPin, note);
-
-  // This is blocking, use timers to make this non-blocking
-  /*for (int i = 0; i < COIN_NOTES_COUNT; i++) {
-    int noteDuration = 1000 / coinNoteDurations[i];
-    int pauseBetweenNotes = noteDuration * 1.30;
-
-    tone(SPEAKER_PIN, coinNote[i], noteDuration);
-    delay(pauseBetweenNotes);
-    noTone(SPEAKER_PIN);
-  }*/
+    tone(_speakerPin, _currentNote, _currentDuration);
+  }
 }
 
 bool Music::isEmptyMelody() {
+  if (isEndNote(0)) {
+    return true;
+  }
+
   for (int i = 0; i < NOTES_COUNT; i++) {
-    if (0 != _melody[i][0]) {
+    if (getDurationAt(i) > 0) {
       return false;
     }
   }
@@ -69,16 +61,39 @@ bool Music::isEmptyMelody() {
   return true;
 }
 
-void Music::setMelody(const unsigned int melody[][2]) {
-  Debug::println("!!!NEW MELODY!!!!");
-  for (int i = 0; i < NOTES_COUNT; i++) {
-    _melody[i][0] = melody[i][0];
-    _melody[i][1] = melody[i][1];
+bool Music::isEndNote(int notePosition) {
+  return (getDurationAt(notePosition) <= 0);
+}
+
+void Music::setCurrentNoteAndDuration(int notePosition) {
+  _currentNote = getNoteAt(notePosition);
+  _currentDuration = getDurationAt(notePosition);
+}
+
+int Music::getNoteAt(int notePosition) {
+  int item[2];
+  PROGMEM_readAnything(&_melody[notePosition], item);
+
+  return item[0];
+}
+
+int Music::getDurationAt(int notePosition) {
+  int item[2];
+  PROGMEM_readAnything(&_melody[notePosition], item);
+
+  if (0 == item[1]) {
+    return 0;
   }
 
-  _notePosition = 0;
+  return 1000 / item[1];
+}
 
-  printCurrentMelody();
+void Music::setMelody(const int (*melody)[2]) {
+  noTone(_speakerPin);
+  _melody = melody;
+  _notePosition = 0;
+  _firstNotePlayed = false;
+  setCurrentNoteAndDuration(0);
 }
 
 void Music::printCurrentMelody() {
@@ -86,9 +101,11 @@ void Music::printCurrentMelody() {
 
   for (int i = 0; i < NOTES_COUNT; i++) {
     Debug::print("note: ");
-    Debug::print(_melody[i][0]);
+    Debug::print(getNoteAt(i));
     Debug::print(" duration: ");
-    Debug::println(_melody[i][1]);
+    Debug::print(getDurationAt(i));
+    Debug::print(" speakerPin: ");
+    Debug::println(_speakerPin);
   }
 }
 

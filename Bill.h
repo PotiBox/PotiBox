@@ -3,7 +3,6 @@
 
 #include "Arduino.h"
 #include <Adafruit_TiCoServo.h>
-#include <known_16bit_timers.h>
 
 class Bill {
   public:

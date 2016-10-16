@@ -44,10 +44,10 @@ void Lights::animate(unsigned long currentTime, int milliseconds, int color) {
 
 void Lights::setColor(uint32_t *color) {
   for (int i = 0; i < _pixelCount; i++) {
-    _neoPixels.setPixelColor(i, _neoPixels.Color(color[0], color[1], color[2]));
+    //_neoPixels.setPixelColor(i, _neoPixels.Color(color[0], color[1], color[2]));
   }
 
-  _neoPixels.show();
+  //_neoPixels.show();
 }
 
 void Lights::setRandomColors() {
