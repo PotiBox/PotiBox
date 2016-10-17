@@ -47,7 +47,7 @@ void Lights::setColor(uint32_t *color) {
     //_neoPixels.setPixelColor(i, _neoPixels.Color(color[0], color[1], color[2]));
   }
 
-  //_neoPixels.show();
+  _neoPixels.show();
 }
 
 void Lights::setRandomColors() {

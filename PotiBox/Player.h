@@ -1,9 +1,10 @@
 #ifndef Player_h
 #define Player_h
 
+#include <SoftwareSerial.h>
+
 #include "Arduino.h"
 #include "Lights.h"
-#include "Music.h"
 
 class Player {
   public:
@@ -13,7 +14,7 @@ class Player {
 
     static byte CURRENT_ANIM;
 
-    Player(int pixelCount, int lightsPin, int speakerPin);
+    Player(int pixelCount, int lightsPin, int txPin, int rxPin);
     void begin();
     void cycle(unsigned long currentTime);
 
@@ -22,7 +23,7 @@ class Player {
     static void coinInserted();
   private:
     Lights *_lights;
-    Music *_music;
+    static SoftwareSerial *_driverSerial;
 };
 
 #endif

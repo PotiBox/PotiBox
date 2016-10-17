@@ -14,10 +14,10 @@ unsigned long MILLIS = 0;
 Coin coinClass = Coin(A5);
 
 // bill class
-Bill billClass = Bill(10, A4, true);
+Bill billClass = Bill(A4);
 
 // player class (45 pixels per side)
-Player playerClass = Player(45, 13, 7/*8*/);
+Player playerClass = Player(45, 13, 9, 11);
 
 void setup() {
   Debug::setup(DEBUG);
@@ -25,7 +25,6 @@ void setup() {
   pinMode(STATUS_LIGHT_PIN, OUTPUT);
   analogWrite(STATUS_LIGHT_PIN, 255);
 
-  billClass.begin();
   playerClass.begin();
 
   // wait a bit for our

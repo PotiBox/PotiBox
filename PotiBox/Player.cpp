@@ -1,18 +1,19 @@
 #include "Arduino.h"
 #include "Debug.h"
 #include "Player.h"
-#include "Melodies.h"
 
 byte Player::CURRENT_ANIM = Player::ANIM_NONE;
+SoftwareSerial *Player::_driverSerial = 0;
 
-Player::Player(int pixelCount, int lightsPin, int speakerPin) {
+Player::Player(int pixelCount, int lightsPin, int txPin, int rxPin) {
   _lights = new Lights(pixelCount, lightsPin);
-  _music = new Music(speakerPin);
+  Player::_driverSerial = new SoftwareSerial(txPin, rxPin);
+
+  Player::_driverSerial->begin(9600);
 }
 
 void Player::begin() {
   _lights->begin();
-  _music->begin();
 }
 
 void Player::cycle(unsigned long currentTime) {
@@ -23,31 +24,31 @@ void Player::cycle(unsigned long currentTime) {
       Debug::println("Player: Bill");
 
       _lights->animate(currentTime, 5000, Lights::RANDOM);
-      _music->setMelody(MELODY_BILL);
       break;
     case Player::ANIM_COIN:
       Debug::println("Player: Coin");
 
       _lights->animate(currentTime, 2000, Lights::YELLOW);
-      _music->setMelody(MELODY_COIN);
       break;
   }
 
   // TODO: This breaks music for some reason right now!!
   _lights->cycle(currentTime);
-  _music->cycle(currentTime);
 
   Player::CURRENT_ANIM = Player::ANIM_NONE;
 }
 
 void Player::billInserted() {
   Player::CURRENT_ANIM = Player::ANIM_BILL;
+  Player::_driverSerial->write("billstart");
 }
 
 void Player::billFinished() {
   Player::CURRENT_ANIM = Player::ANIM_NONE;
+  Player::_driverSerial->write("billstop");
 }
 
 void Player::coinInserted() {
   Player::CURRENT_ANIM = Player::ANIM_COIN;
+  Player::_driverSerial->write("coinstart");
 }

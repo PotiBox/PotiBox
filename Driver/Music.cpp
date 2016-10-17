@@ -1,8 +1,6 @@
 #include "Arduino.h"
 #include "Music.h"
 #include "Melodies.h"
-#include "Debug.h"
-#include "PROGMEM_read.h"
 
 Music::Music(int speakerPin) {
   _speakerPin = speakerPin;
@@ -10,9 +8,6 @@ Music::Music(int speakerPin) {
   _firstNotePlayed = false;
 
   setMelody(MELODY_NONE);
-}
-
-void Music::begin() {
 }
 
 void Music::cycle(unsigned long currentTime) {
@@ -71,21 +66,17 @@ void Music::setCurrentNoteAndDuration(int notePosition) {
 }
 
 int Music::getNoteAt(int notePosition) {
-  int item[2];
-  PROGMEM_readAnything(&_melody[notePosition], item);
-
-  return item[0];
+  return _melody[notePosition][0];
 }
 
 int Music::getDurationAt(int notePosition) {
-  int item[2];
-  PROGMEM_readAnything(&_melody[notePosition], item);
+  int duration = _melody[notePosition][1];
 
-  if (0 == item[1]) {
+  if (0 == duration) {
     return 0;
   }
 
-  return 1000 / item[1];
+  return 1000 / duration;
 }
 
 void Music::setMelody(const int (*melody)[2]) {
@@ -97,15 +88,15 @@ void Music::setMelody(const int (*melody)[2]) {
 }
 
 void Music::printCurrentMelody() {
-  Debug::println("***current***");
+  Serial.println("***current***");
 
   for (int i = 0; i < NOTES_COUNT; i++) {
-    Debug::print("note: ");
-    Debug::print(getNoteAt(i));
-    Debug::print(" duration: ");
-    Debug::print(getDurationAt(i));
-    Debug::print(" speakerPin: ");
-    Debug::println(_speakerPin);
+    Serial.print("note: ");
+    Serial.print(getNoteAt(i));
+    Serial.print(" duration: ");
+    Serial.print(getDurationAt(i));
+    Serial.print(" speakerPin: ");
+    Serial.println(_speakerPin);
   }
 }
 

@@ -7,7 +7,6 @@
 class Music {
   public:
     Music(int speakerPin);
-    void begin();
     void cycle(unsigned long currentTime);
     void setMelody(const int (*melody)[2]);
   private:
