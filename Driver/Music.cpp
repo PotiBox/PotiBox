@@ -6,11 +6,14 @@ Music::Music(int speakerPin) {
   _speakerPin = speakerPin;
   _notePosition = 0;
   _firstNotePlayed = false;
+  _isPlaying = false;
 
   setMelody(MELODY_NONE);
 }
 
 void Music::cycle(unsigned long currentTime) {
+  _isPlaying = false;
+
   // kill our playing if we are past our times
   if (isEmptyMelody()) {
     return;
@@ -18,6 +21,8 @@ void Music::cycle(unsigned long currentTime) {
     setMelody(MELODY_NONE);
     return;
   }
+
+  _isPlaying = true;
 
   unsigned long toneElapsedTime = currentTime - _toneTimer;
 
@@ -80,6 +85,11 @@ int Music::getDurationAt(int notePosition) {
 }
 
 void Music::setMelody(const int (*melody)[2]) {
+  // only change if not playing something
+  if (_isPlaying) {
+    return;
+  }
+
   noTone(_speakerPin);
   _melody = melody;
   _notePosition = 0;

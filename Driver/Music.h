@@ -17,6 +17,7 @@ class Music {
     const int (*_melody)[2];
     int _currentNote;
     int _currentDuration;
+    bool _isPlaying;
 
     bool isEmptyMelody();
     bool isEndNote(int notePosition);
