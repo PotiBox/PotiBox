@@ -7,7 +7,6 @@
 class Music {
   public:
     Music(int speakerPin);
-    void begin();
     void cycle(unsigned long currentTime);
     void setMelody(const int (*melody)[2]);
   private:
@@ -18,13 +17,14 @@ class Music {
     const int (*_melody)[2];
     int _currentNote;
     int _currentDuration;
+    bool _isPlaying;
 
     bool isEmptyMelody();
     bool isEndNote(int notePosition);
     void setCurrentNoteAndDuration(int notePosition);
     int getNoteAt(int notePosition);
     int getDurationAt(int notePosition);
-    void printCurrentMelody();
 };
 
 #endif
+

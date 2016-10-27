@@ -1,21 +1,19 @@
 #include "Arduino.h"
 #include "Music.h"
 #include "Melodies.h"
-#include "Debug.h"
-#include "PROGMEM_read.h"
 
 Music::Music(int speakerPin) {
   _speakerPin = speakerPin;
   _notePosition = 0;
   _firstNotePlayed = false;
+  _isPlaying = false;
 
   setMelody(MELODY_NONE);
 }
 
-void Music::begin() {
-}
-
 void Music::cycle(unsigned long currentTime) {
+  _isPlaying = false;
+
   // kill our playing if we are past our times
   if (isEmptyMelody()) {
     return;
@@ -23,6 +21,8 @@ void Music::cycle(unsigned long currentTime) {
     setMelody(MELODY_NONE);
     return;
   }
+
+  _isPlaying = true;
 
   unsigned long toneElapsedTime = currentTime - _toneTimer;
 
@@ -71,41 +71,29 @@ void Music::setCurrentNoteAndDuration(int notePosition) {
 }
 
 int Music::getNoteAt(int notePosition) {
-  int item[2];
-  PROGMEM_readAnything(&_melody[notePosition], item);
-
-  return item[0];
+  return _melody[notePosition][0];
 }
 
 int Music::getDurationAt(int notePosition) {
-  int item[2];
-  PROGMEM_readAnything(&_melody[notePosition], item);
+  int duration = _melody[notePosition][1];
 
-  if (0 == item[1]) {
+  if (0 == duration) {
     return 0;
   }
 
-  return 1000 / item[1];
+  return 1000 / duration;
 }
 
 void Music::setMelody(const int (*melody)[2]) {
+  // only change if not playing something
+  if (_isPlaying) {
+    return;
+  }
+
   noTone(_speakerPin);
   _melody = melody;
   _notePosition = 0;
   _firstNotePlayed = false;
   setCurrentNoteAndDuration(0);
-}
-
-void Music::printCurrentMelody() {
-  Debug::println("***current***");
-
-  for (int i = 0; i < NOTES_COUNT; i++) {
-    Debug::print("note: ");
-    Debug::print(getNoteAt(i));
-    Debug::print(" duration: ");
-    Debug::print(getDurationAt(i));
-    Debug::print(" speakerPin: ");
-    Debug::println(_speakerPin);
-  }
 }
 

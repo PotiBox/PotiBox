@@ -6,15 +6,19 @@
 
 #define NOTES_COUNT 10
 
-const int MELODY_NONE[NOTES_COUNT][2] PROGMEM = {
+const int MELODY_NONE[NOTES_COUNT][2] = {
   {0, 0}
 };
 
-const int MELODY_BILL[NOTES_COUNT][2] PROGMEM = {
+const int MELODY_BILL[NOTES_COUNT][2] = {
+  {NOTE_C7, 4},
+  {NOTE_A7, 8},
+  {NOTE_C7, 4},
+  {NOTE_A7, 8},
   {0, 0}
 };
 
-const int MELODY_COIN[NOTES_COUNT][2] PROGMEM = {
+const int MELODY_COIN[NOTES_COUNT][2] = {
   {NOTE_C4, 4},
   {NOTE_G3, 8},
   {NOTE_G3, 8},
@@ -28,4 +32,5 @@ const int MELODY_COIN[NOTES_COUNT][2] PROGMEM = {
 };
 
 #endif
+
 
