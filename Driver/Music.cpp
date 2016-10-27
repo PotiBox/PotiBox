@@ -97,16 +97,3 @@ void Music::setMelody(const int (*melody)[2]) {
   setCurrentNoteAndDuration(0);
 }
 
-void Music::printCurrentMelody() {
-  Serial.println("***current***");
-
-  for (int i = 0; i < NOTES_COUNT; i++) {
-    Serial.print("note: ");
-    Serial.print(getNoteAt(i));
-    Serial.print(" duration: ");
-    Serial.print(getDurationAt(i));
-    Serial.print(" speakerPin: ");
-    Serial.println(_speakerPin);
-  }
-}
-

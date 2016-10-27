@@ -2,15 +2,19 @@
 #include "NeoPatterns.h"
 #include "Debug.h"
 
-const bool DEBUG = true;
+#define STATUS_LIGHT_PIN 12
+
+const bool DEBUG = false;
 
 // bill sensor
 const int BILL_SENSOR = A4;
-const int BILL_SENSOR_LIMIT = 70;
+// the bill sensor can jump slightly when a coin
+const int BILL_SENSOR_LIMIT = 80;
 unsigned long billTimer = 0;
 bool billWasInserted = false;
+bool billOnSensor = false;
 bool billIsExtraSpinning = false;
-    
+
 // coin sensor
 const int COIN_SENSOR = A5;
 const int COIN_SENSOR_LIMIT = 200;
@@ -30,9 +34,15 @@ unsigned long currentTime;
 void setup() {
   Debug::setup(DEBUG);
   driverSerial.begin(9600);
+
+  pinMode(STATUS_LIGHT_PIN, OUTPUT);
+  analogWrite(STATUS_LIGHT_PIN, 255);
     
   neoPixels.begin();
   neoPixels.Off();
+
+  // warmup photoresistors
+  delay(1000);
 
   Debug::println("Starting PotiBox");
 }
@@ -55,24 +65,30 @@ void billCycle() {
    * 3) Spin for 2 more seconds to ensure the bill is fully though
    */
 
-  //Serial.print("Bill: ");
-  //Serial.println(reading);
-
   if (BILL_SENSOR_LIMIT < reading) {
-    billWasInserted = true;
+    //Debug::print("Bill: ");
+    //Debug::println(reading);
 
-    Serial.println("write 1");
-    writeToDriver('1');
+    if (!billOnSensor) {
+      neoPixels.TheaterChase(neoPixels.Color(0, 0, 100), neoPixels.Color(0, 100, 100), 50, FORWARD);
+      //neoPixels.Scanner(neoPixels.Color(0, 50, 50), 30);
+      writeToDriver('1');
+    }
+
+    billWasInserted = true;
+    billOnSensor = true;
   } else if (billWasInserted) {
+    billOnSensor = false;
+
     if (!billIsExtraSpinning) {
       billIsExtraSpinning = true;
       billTimer = currentTime;
-
-      Serial.println("write 2");
-      writeToDriver('2');
     } else if (5000 < (currentTime - billTimer)) {
       billWasInserted = false;
       billIsExtraSpinning = false;
+
+      neoPixels.Off();
+      writeToDriver('2');
     }
   }
 }
@@ -80,10 +96,10 @@ void billCycle() {
 void coinCycle() {
   int reading = analogRead(COIN_SENSOR);
 
-  //Serial.print("Coin: ");
-  //Serial.println(reading);
+  if (COIN_SENSOR_LIMIT < reading) {
+    //Debug::print("Coin: ");
+    //Debug::println(reading);
 
-  if (COIN_SENSOR_LIMIT > reading) {
     coinSwitched = true;
   } else {
     // if it was pressed and now is open again
@@ -96,8 +112,8 @@ void coinCycle() {
       coinTimer = currentTime;
 
       // coin inserted
+      //neoPixels.TheaterChase(neoPixels.Color(0, 0, 100), neoPixels.Color(0, 100, 100), 50, FORWARD);
       neoPixels.Scanner(neoPixels.Color(50, 50, 0), 50);
-      Serial.println("write 3");
       writeToDriver('3');
     }
 

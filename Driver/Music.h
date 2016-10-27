@@ -24,7 +24,7 @@ class Music {
     void setCurrentNoteAndDuration(int notePosition);
     int getNoteAt(int notePosition);
     int getDurationAt(int notePosition);
-    void printCurrentMelody();
 };
 
 #endif
+

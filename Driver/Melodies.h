@@ -11,6 +11,10 @@ const int MELODY_NONE[NOTES_COUNT][2] = {
 };
 
 const int MELODY_BILL[NOTES_COUNT][2] = {
+  {NOTE_C7, 4},
+  {NOTE_A7, 8},
+  {NOTE_C7, 4},
+  {NOTE_A7, 8},
   {0, 0}
 };
 
@@ -28,4 +32,5 @@ const int MELODY_COIN[NOTES_COUNT][2] = {
 };
 
 #endif
+
 
