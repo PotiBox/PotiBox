@@ -24,7 +24,7 @@ class NeoPatterns : public Adafruit_NeoPixel {
       uint32_t Color1, Color2; // What colors are in use
       uint16_t TotalSteps; // total number of steps in the pattern
       uint16_t Index; // current step within the pattern
-      
+      uint8_t num;
       void (*OnComplete)();  // Callback on completion of pattern
       
       NeoPatterns(uint16_t pixels, uint8_t pin, uint8_t type, void (*callback)());
@@ -34,6 +34,9 @@ class NeoPatterns : public Adafruit_NeoPixel {
       void Reverse();
       void RainbowCycle(uint8_t interval, direction dir);
       void RainbowCycleUpdate();
+      void RainbowChase();
+      void RainbowChasespin();
+      void Blink(uint32_t color, uint8_t interval, uint8_t num);
       void TheaterChase(uint32_t color1, uint32_t color2, uint8_t interval, direction dir);
       void TheaterChaseUpdate();
       void ColorWipe(uint32_t color, uint8_t interval, direction dir);
