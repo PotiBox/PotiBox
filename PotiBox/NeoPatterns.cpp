@@ -71,6 +71,19 @@ void NeoPatterns::Reverse() {
   }
 }
 
+// Make the light blink
+void NeoPatterns::Blink(uint32_t color, uint8_t interval, uint8_t num) { //interval = time of the blink, num = number in blink
+  for(int i=0; i<num; i++) {
+    ColorSet(color);
+    delay(interval);
+    Off();
+    delay(interval);
+  }
+
+  show();
+  Increment();
+}
+
 // Initialize for a RainbowCycle
 void NeoPatterns::RainbowCycle(uint8_t interval, direction dir) {
   currentPattern = RAINBOW_CYCLE;
@@ -89,6 +102,40 @@ void NeoPatterns::RainbowCycleUpdate() {
   show();
   Increment();
 }
+
+void NeoPatterns::RainbowChase() {
+  for(int i=0; i<numPixels(); i++) {
+    setPixelColor(i, Wheel(((i * 256 / numPixels()) + Index) & 255));
+  }
+
+  show();delay(2000);
+  Increment();
+  
+}
+
+//la fonction que je veux faire avec un arc-en-ciel étoile filante
+
+void NeoPatterns::RainbowChasespin() {
+  for(int h=0;h<2;h++) {
+  for(int i=0; i<numPixels(); i++) {
+    for(int j=0; j<numPixels()*2; j++) { //le "2" correspond au nombre de spin autour de la valise
+      setPixelColor(i, Wheel(((i * 256 / numPixels()) + Index) & 255));
+      setPixelColor(i+1, Wheel(((i * 256 / numPixels()) + Index) & 255));
+      setPixelColor(i+2, Wheel(((i * 256 / numPixels()) + Index) & 255));
+      setPixelColor(i+3, Wheel(((i * 256 / numPixels()) + Index) & 255));
+    }
+
+    
+      show();delay(40);
+  Increment();
+    
+
+    }
+    
+
+    }
+}
+
 
 // Initialize for a Theater Chase
 void NeoPatterns::TheaterChase(uint32_t color1, uint32_t color2, uint8_t interval, direction dir) {

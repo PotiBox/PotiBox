@@ -1,4 +1,6 @@
-#include <NeoSWSerial.h>
+#include <Adafruit_NeoPixel.h>
+
+#include "NeoSWSerial.h"
 #include "NeoPatterns.h"
 #include "Debug.h"
 
@@ -70,9 +72,11 @@ void billCycle() {
     //Debug::println(reading);
 
     if (!billOnSensor) {
-      neoPixels.TheaterChase(neoPixels.Color(0, 0, 100), neoPixels.Color(0, 100, 100), 50, FORWARD);
-      //neoPixels.Scanner(neoPixels.Color(0, 50, 50), 30);
       writeToDriver('1');
+      neoPixels.RainbowChasespin();
+      //neoPixels.TheaterChase(neoPixels.Color(100, 0, 100), neoPixels.Color(100, 100, 100), 50, FORWARD);
+      //neoPixels.RainbowCycle(5, FORWARD);
+      //neoPixels.TheaterChase(neoPixels.Color(100, 0, 100), neoPixels.Color(0, 0, 0), 250 , FORWARD);
     }
 
     billWasInserted = true;
@@ -113,8 +117,9 @@ void coinCycle() {
 
       // coin inserted
       //neoPixels.TheaterChase(neoPixels.Color(0, 0, 100), neoPixels.Color(0, 100, 100), 50, FORWARD);
-      neoPixels.Scanner(neoPixels.Color(50, 50, 0), 50);
+
       writeToDriver('3');
+      neoPixels.Blink(neoPixels.Color(0, 100, 0), 500, 3);
     }
 
     coinSwitched = false;
